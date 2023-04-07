@@ -3,6 +3,6 @@ import { PvpService } from './pvp.service';
 import { PvpGateway } from './pvp.gateway';
 
 @Module({
-  providers: [PvpGateway, PvpService]
+  providers: [PvpGateway, PvpService],
 })
 export class PvpModule {}

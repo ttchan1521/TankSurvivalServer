@@ -11,7 +11,6 @@ export class PlayerService {
 
   play(playerData: PlayerData) {
     const room = playerData.roomId;
-    
   }
 
   findAll() {

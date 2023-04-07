@@ -10,7 +10,7 @@ export class PvpService {
   create(server: Server, client: Socket, createPvpDto: CreatePvpDto) {
     const c = this.clients.shift();
     if (c) {
-      const room = "room" + c.id;
+      const room = 'room' + c.id;
       client.join(room);
       c.join(room);
       //server.to(c.id).emit('joined', c.id, c.id);

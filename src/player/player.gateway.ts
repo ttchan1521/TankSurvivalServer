@@ -26,19 +26,20 @@ export class PlayerGateway {
   @SubscribeMessage('player play')
   play(
     @ConnectedSocket() client: Socket,
-    @MessageBody() playerData: PlayerInit) {
+    @MessageBody() playerData: PlayerInit,
+  ) {
     const room = playerData.roomId;
-    client.broadcast.to(room).emit("other player play", playerData);
+    client.broadcast.to(room).emit('other player play', playerData);
     //return this.playerService.play(playerData);
   }
 
   @SubscribeMessage('player move')
   move(
     @ConnectedSocket() client: Socket,
-    @MessageBody() playerData: PlayerData
+    @MessageBody() playerData: PlayerData,
   ) {
     const room = playerData.roomId;
-    client.broadcast.to(room).emit("other player move", playerData);
+    client.broadcast.to(room).emit('other player move', playerData);
   }
   @SubscribeMessage('findAllPlayer')
   findAll() {

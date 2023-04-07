@@ -10,7 +10,6 @@ import { PlayerService } from './player.service';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { PlayerData } from './dto/player.dto';
-import { PlayerInit } from './dto/initplayer.dto';
 
 @WebSocketGateway()
 export class PlayerGateway {
@@ -26,8 +25,7 @@ export class PlayerGateway {
   @SubscribeMessage('player play')
   play(
     @ConnectedSocket() client: Socket,
-    @MessageBody() playerData: PlayerInit,
-  ) {
+    @MessageBody() playerData: PlayerData) {
     const room = playerData.roomId;
     client.broadcast.to(room).emit('other player play', playerData);
     //return this.playerService.play(playerData);
@@ -41,6 +39,16 @@ export class PlayerGateway {
     const room = playerData.roomId;
     client.broadcast.to(room).emit('other player move', playerData);
   }
+
+  @SubscribeMessage('playerFire')
+  fire(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() playerData: PlayerData
+  ) {
+    const room = playerData.roomId;
+    client.broadcast.to(room).emit("otherPlayerFire", playerData);
+  }
+
   @SubscribeMessage('findAllPlayer')
   findAll() {
     return this.playerService.findAll();

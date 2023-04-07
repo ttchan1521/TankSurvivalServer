@@ -1,6 +1,6 @@
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class PlayerData {
+export class UnitData {
     @IsString()
     @IsNotEmpty()
     socketId: string;

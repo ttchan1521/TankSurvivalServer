@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { PvpModule } from './pvp/pvp.module';
 import { PlayerModule } from './player/player.module';
 import { UnitModule } from './unit/unit.module';
+import { CollectibleModule } from './collectible/collectible.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { UnitModule } from './unit/unit.module';
     PvpModule,
     PlayerModule,
     UnitModule,
+    CollectibleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

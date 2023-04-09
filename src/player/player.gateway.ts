@@ -49,6 +49,24 @@ export class PlayerGateway {
     client.broadcast.to(room).emit("otherPlayerFire", playerData);
   }
 
+  @SubscribeMessage('attackPlayer')
+  attack(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() playerData: PlayerData
+  ) {
+    const room = playerData.roomId;
+    client.broadcast.to(room).emit("OnAttackPlayer", playerData);
+  }
+
+  @SubscribeMessage('playerDestroy')
+  destroy(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() playerData: PlayerData
+  ) {
+    const room = playerData.roomId;
+    client.broadcast.to(room).emit("OnPlayerDestroy", playerData);
+  }
+
   @SubscribeMessage('findAllPlayer')
   findAll() {
     return this.playerService.findAll();

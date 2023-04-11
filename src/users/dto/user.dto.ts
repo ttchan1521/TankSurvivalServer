@@ -1,3 +1,4 @@
+import { PartialType } from '@nestjs/mapped-types';
 import { Type } from 'class-transformer';
 import {
   IsBoolean,
@@ -37,6 +38,11 @@ export class UpdateUserScoreDto {
   @IsDefined()
   @IsNotEmpty()
   userId: string;
+
+  @IsString()
+  @IsDefined()
+  @IsNotEmpty()
+  mode: string;
 }
 
 export class ListUserDto {
@@ -58,9 +64,21 @@ export class ListUserDto {
   pagination: boolean;
 }
 
+export class ListUserModeDto extends PartialType(ListUserDto) {
+  @IsString()
+  @IsDefined()
+  @IsNotEmpty()
+  mode: string;
+}
+
 export class UserRankDto {
   @IsString()
   @IsDefined()
   @IsNotEmpty()
   userId: string;
+
+  @IsString()
+  @IsDefined()
+  @IsNotEmpty()
+  mode: string;
 }

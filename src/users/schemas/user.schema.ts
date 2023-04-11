@@ -13,9 +13,6 @@ export class User {
 
   @Prop({ required: true, toJson: false })
   password: string;
-
-  @Prop({ default: 0 })
-  score: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

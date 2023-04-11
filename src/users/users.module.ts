@@ -4,6 +4,7 @@ import { User, UserSchema } from './schemas/user.schema';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import * as bcrypt from 'bcrypt';
+import { Score, ScoreSchema } from './schemas/score.schema';
 
 @Module({
   imports: [
@@ -24,6 +25,10 @@ import * as bcrypt from 'bcrypt';
           });
           return schema;
         },
+      },
+      {
+        name: Score.name,
+        useFactory: () => ScoreSchema,
       },
     ]),
   ],

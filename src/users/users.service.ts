@@ -6,15 +6,18 @@ import { REDIS_CLIENT_TOKEN } from '../redis/redis.module';
 import {
   CreateUserDto,
   ListUserDto,
+  ListUserModeDto,
   UpdateUserScoreDto,
   UserRankDto,
 } from './dto/user.dto';
 import { User, UserDocument } from './schemas/user.schema';
+import { Score, ScoreDocument } from './schemas/score.schema';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(Score.name) private readonly scoreModel: Model<ScoreDocument>,
     @Inject(REDIS_CLIENT_TOKEN)
     private readonly redisClient: Redis,
   ) {}
@@ -43,19 +46,21 @@ export class UsersService {
    * Update user's score
    * @param updateUserScoreDto
    */
-  async updateUserScore(updateUserScoreDto: UpdateUserScoreDto): Promise<User> {
-    const { userId, score } = updateUserScoreDto;
+  async updateUserScore(
+    updateUserScoreDto: UpdateUserScoreDto,
+  ): Promise<Score> {
+    const { userId, score, mode } = updateUserScoreDto;
 
-    const updatedUser = await this.userModel.findByIdAndUpdate(
-      userId,
+    const updateScore = await this.scoreModel.findOneAndUpdate(
+      { user: userId, mode: mode },
       { score },
-      { new: true },
+      { new: true, upsert: true },
     );
 
     // Push user's score to redis using sorted data type
-    this.redisClient.zadd('user:leaderboard', score, `user:${updatedUser.id}`);
+    this.redisClient.zadd(`user:leaderboard:${mode}`, score, `user:${userId}`);
 
-    return updatedUser;
+    return updateScore;
   }
 
   /**
@@ -78,17 +83,17 @@ export class UsersService {
 
   /**
    * Get user's rank
-   * @param listUserDto
+   * @param listUserModeDto
    */
-  async leaderBoard(listUserDto: ListUserDto) {
-    const page = listUserDto.page || 1;
-    const perPage = listUserDto.perPage || 10;
+  async leaderBoard(listUserModeDto: ListUserModeDto) {
+    const page = listUserModeDto.page || 1;
+    const perPage = listUserModeDto.perPage || 10;
     const min = (page - 1) * perPage;
     const max = min + (perPage - 1);
 
     // Get leaderboard (sorted data) using zrevrange
     const leaderboard = await this.redisClient.zrevrange(
-      'user:leaderboard',
+      `user:leaderboard:${listUserModeDto.mode}`,
       min,
       max,
       'WITHSCORES',
@@ -115,7 +120,7 @@ export class UsersService {
     const [userInfo, rank] = await Promise.all([
       this.redisClient.hgetall(`user:${userRankDto.userId}`),
       this.redisClient.zrevrank(
-        'user:leaderboard',
+        `user:leaderboard:${userRankDto.mode}`,
         `user:${userRankDto.userId}`,
       ),
     ]);

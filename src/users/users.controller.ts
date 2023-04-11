@@ -2,11 +2,13 @@ import { Body, Controller, Get, Patch, Post, Query } from '@nestjs/common';
 import {
   CreateUserDto,
   ListUserDto,
+  ListUserModeDto,
   UpdateUserScoreDto,
   UserRankDto,
 } from './dto/user.dto';
 import { User } from './schemas/user.schema';
 import { UsersService } from './users.service';
+import { Score } from './schemas/score.schema';
 
 @Controller('users')
 export class UsersController {
@@ -20,7 +22,7 @@ export class UsersController {
   @Patch()
   async updateUserScore(
     @Body() updateUserScoreDto: UpdateUserScoreDto,
-  ): Promise<User> {
+  ): Promise<Score> {
     return await this.userService.updateUserScore(updateUserScoreDto);
   }
 
@@ -30,8 +32,8 @@ export class UsersController {
   }
 
   @Get('leaderboard')
-  async leaderBoard(@Query() listUserDto: ListUserDto) {
-    return await this.userService.leaderBoard(listUserDto);
+  async leaderBoard(@Query() listUserModeDto: ListUserModeDto) {
+    return await this.userService.leaderBoard(listUserModeDto);
   }
 
   @Get('rank')

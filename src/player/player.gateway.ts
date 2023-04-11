@@ -25,7 +25,8 @@ export class PlayerGateway {
   @SubscribeMessage('player play')
   play(
     @ConnectedSocket() client: Socket,
-    @MessageBody() playerData: PlayerData) {
+    @MessageBody() playerData: PlayerData,
+  ) {
     const room = playerData.roomId;
     client.broadcast.to(room).emit('other player play', playerData);
     //return this.playerService.play(playerData);
@@ -43,28 +44,28 @@ export class PlayerGateway {
   @SubscribeMessage('playerFire')
   fire(
     @ConnectedSocket() client: Socket,
-    @MessageBody() playerData: PlayerData
+    @MessageBody() playerData: PlayerData,
   ) {
     const room = playerData.roomId;
-    client.broadcast.to(room).emit("otherPlayerFire", playerData);
+    client.broadcast.to(room).emit('otherPlayerFire', playerData);
   }
 
   @SubscribeMessage('attackPlayer')
   attack(
     @ConnectedSocket() client: Socket,
-    @MessageBody() playerData: PlayerData
+    @MessageBody() playerData: PlayerData,
   ) {
     const room = playerData.roomId;
-    client.broadcast.to(room).emit("OnAttackPlayer", playerData);
+    client.broadcast.to(room).emit('OnAttackPlayer', playerData);
   }
 
   @SubscribeMessage('playerDestroy')
   destroy(
     @ConnectedSocket() client: Socket,
-    @MessageBody() playerData: PlayerData
+    @MessageBody() playerData: PlayerData,
   ) {
     const room = playerData.roomId;
-    client.broadcast.to(room).emit("OnPlayerDestroy", playerData);
+    client.broadcast.to(room).emit('OnPlayerDestroy', playerData);
   }
 
   @SubscribeMessage('findAllPlayer')

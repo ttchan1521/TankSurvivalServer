@@ -1,4 +1,10 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  SubscribeMessage,
+  MessageBody,
+  ConnectedSocket,
+  WebSocketServer,
+} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { CollectibleService } from './collectible.service';
 import { CreateCollectibleDto } from './dto/create-collectible.dto';
@@ -9,7 +15,7 @@ import { CollectibleData } from './dto/collectible.dto';
 export class CollectibleGateway {
   @WebSocketServer()
   server: Server;
-  
+
   constructor(private readonly collectibleService: CollectibleService) {}
 
   @SubscribeMessage('createCollectible')
@@ -20,11 +26,11 @@ export class CollectibleGateway {
   @SubscribeMessage('spawnCollectible')
   clear(
     @ConnectedSocket() client: Socket,
-    @MessageBody() unitData: CollectibleData
+    @MessageBody() unitData: CollectibleData,
   ) {
     const room = unitData.roomId;
     console.log(JSON.stringify(unitData));
-    client.broadcast.to(room).emit("OnSpawnCollectible", unitData);
+    client.broadcast.to(room).emit('OnSpawnCollectible', unitData);
   }
 
   @SubscribeMessage('findAllCollectible')
@@ -39,7 +45,10 @@ export class CollectibleGateway {
 
   @SubscribeMessage('updateCollectible')
   update(@MessageBody() updateCollectibleDto: UpdateCollectibleDto) {
-    return this.collectibleService.update(updateCollectibleDto.id, updateCollectibleDto);
+    return this.collectibleService.update(
+      updateCollectibleDto.id,
+      updateCollectibleDto,
+    );
   }
 
   @SubscribeMessage('removeCollectible')

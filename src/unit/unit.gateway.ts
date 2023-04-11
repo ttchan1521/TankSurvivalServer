@@ -1,9 +1,9 @@
-import { 
-  WebSocketGateway, 
-  SubscribeMessage, 
-  MessageBody, 
-  ConnectedSocket, 
-  WebSocketServer 
+import {
+  WebSocketGateway,
+  SubscribeMessage,
+  MessageBody,
+  ConnectedSocket,
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { UnitService } from './unit.service';
@@ -16,7 +16,7 @@ export class UnitGateway {
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly unitService: UnitService) { }
+  constructor(private readonly unitService: UnitService) {}
 
   @SubscribeMessage('createUnit')
   create(@MessageBody() createUnitDto: CreateUnitDto) {
@@ -29,39 +29,27 @@ export class UnitGateway {
   }
 
   @SubscribeMessage('spawnUnit')
-  spawn(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() unitData: UnitData
-  ) {
+  spawn(@ConnectedSocket() client: Socket, @MessageBody() unitData: UnitData) {
     const room = unitData.roomId;
-    client.broadcast.to(room).emit("OnSpawnUnit", unitData);
+    client.broadcast.to(room).emit('OnSpawnUnit', unitData);
   }
 
   @SubscribeMessage('enemyMove')
-  move(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() unitData: UnitData
-  ) {
+  move(@ConnectedSocket() client: Socket, @MessageBody() unitData: UnitData) {
     const room = unitData.roomId;
-    client.broadcast.to(room).emit("OnEnemyMove", unitData);
+    client.broadcast.to(room).emit('OnEnemyMove', unitData);
   }
 
   @SubscribeMessage('unitHealthChange')
-  health(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() unitData: UnitData
-  ) {
+  health(@ConnectedSocket() client: Socket, @MessageBody() unitData: UnitData) {
     const room = unitData.roomId;
-    client.broadcast.to(room).emit("OnUnitHealthChange", unitData);
+    client.broadcast.to(room).emit('OnUnitHealthChange', unitData);
   }
 
   @SubscribeMessage('unitClear')
-  clear(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() unitData: UnitData
-  ) {
+  clear(@ConnectedSocket() client: Socket, @MessageBody() unitData: UnitData) {
     const room = unitData.roomId;
-    client.broadcast.to(room).emit("OnUnitClear", unitData);
+    client.broadcast.to(room).emit('OnUnitClear', unitData);
   }
 
   @SubscribeMessage('findOneUnit')

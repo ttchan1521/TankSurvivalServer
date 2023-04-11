@@ -3,6 +3,6 @@ import { CollectibleService } from './collectible.service';
 import { CollectibleGateway } from './collectible.gateway';
 
 @Module({
-  providers: [CollectibleGateway, CollectibleService]
+  providers: [CollectibleGateway, CollectibleService],
 })
 export class CollectibleModule {}

@@ -4,6 +4,7 @@ import {
   ListUserDto,
   ListUserModeDto,
   UpdateUserScoreDto,
+  UserDto,
   UserRankDto,
 } from './dto/user.dto';
 import { User } from './schemas/user.schema';
@@ -39,5 +40,11 @@ export class UsersController {
   @Get('rank')
   async rank(@Query() userRankDto: UserRankDto) {
     return await this.userService.rank(userRankDto);
+  }
+
+  @Get('user')
+  async getUser(@Query() userDto: UserDto) {
+    console.log(JSON.stringify(userDto));
+    return await this.userService.getUser(userDto.userId);
   }
 }

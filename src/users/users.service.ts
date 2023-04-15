@@ -35,8 +35,6 @@ export class UsersService {
       `user:${newUser.id}`,
       'username',
       createUserDto.username,
-      'email',
-      createUserDto.email,
     );
 
     return newUser;
@@ -79,6 +77,10 @@ export class UsersService {
     const skip = (page - 1) * perPage;
 
     return await this.userModel.find().skip(skip).limit(perPage);
+  }
+
+  async getUser(userId: string) {
+    return await this.userModel.findById(userId);
   }
 
   /**

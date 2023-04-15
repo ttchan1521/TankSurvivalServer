@@ -18,12 +18,6 @@ export class CreateUserDto {
   username: string;
 
   @IsString()
-  @IsEmail()
-  @IsNotEmpty()
-  @IsDefined()
-  email: string;
-
-  @IsString()
   @IsNotEmpty()
   @IsDefined()
   password: string;
@@ -81,4 +75,11 @@ export class UserRankDto {
   @IsDefined()
   @IsNotEmpty()
   mode: string;
+}
+
+export class UserDto {
+  @IsString()
+  @IsDefined()
+  @IsNotEmpty()
+  userId: string;
 }

@@ -37,6 +37,11 @@ export class UpdateUserScoreDto {
   @IsDefined()
   @IsNotEmpty()
   mode: string;
+
+  @IsString()
+  @IsDefined()
+  @IsNotEmpty()
+  operator: string;
 }
 
 export class ListUserDto {

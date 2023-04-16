@@ -47,16 +47,62 @@ export class UsersService {
   async updateUserScore(
     updateUserScoreDto: UpdateUserScoreDto,
   ): Promise<Score> {
-    const { userId, score, mode } = updateUserScoreDto;
+    const { userId, score, mode, operator } = updateUserScoreDto;
 
-    const updateScore = await this.scoreModel.findOneAndUpdate(
-      { user: userId, mode: mode },
-      { score },
-      { new: true, upsert: true },
-    );
-
-    // Push user's score to redis using sorted data type
-    this.redisClient.zadd(`user:leaderboard:${mode}`, score, `user:${userId}`);
+    let updateScore: Score;
+    switch (operator) {
+      case 'set':
+        updateScore = await this.scoreModel.findOneAndUpdate(
+          { user: userId, mode: mode },
+          { score: score },
+          { new: true, upsert: true },
+        );
+        this.redisClient.zadd(
+          `user:leaderboard:${mode}`,
+          score,
+          `user:${userId}`,
+        );
+        break;
+      case 'best':
+        updateScore = await this.scoreModel.findOneAndUpdate(
+          { user: userId, mode: mode, score: { $lt: score } },
+          { score: score },
+          { new: true, upsert: true },
+        );
+        this.redisClient.zadd(
+          `user:leaderboard:${mode}`,
+          'GT',
+          score,
+          `user:${userId}`,
+        );
+        break;
+      case 'incr':
+        updateScore = await this.scoreModel.findOneAndUpdate(
+          { user: userId, mode: mode },
+          { $inc: { score: score } },
+          { new: true, upsert: true },
+        );
+        this.redisClient.zadd(
+          `user:leaderboard:${mode}`,
+          'INCR',
+          score,
+          `user:${userId}`,
+        );
+        break;
+      case 'decr':
+        updateScore = await this.scoreModel.findOneAndUpdate(
+          { user: userId, mode: mode },
+          { $inc: { score: -score } },
+          { new: true, upsert: true },
+        );
+        this.redisClient.zadd(
+          `user:leaderboard:${mode}`,
+          'GT',
+          -score,
+          `user:${userId}`,
+        );
+        break;
+    }
 
     return updateScore;
   }
@@ -116,7 +162,7 @@ export class UsersService {
 
   /**
    * Get user's rank
-   * @param listUserDto
+   * @param userRankDto
    */
   async rank(userRankDto: UserRankDto) {
     const [userInfo, rank] = await Promise.all([

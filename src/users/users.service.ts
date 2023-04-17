@@ -47,10 +47,10 @@ export class UsersService {
   async updateUserScore(
     updateUserScoreDto: UpdateUserScoreDto,
   ): Promise<Score> {
-    const { userId, score, mode, operator } = updateUserScoreDto;
+    const { userId, score, mode, op } = updateUserScoreDto;
 
     let updateScore: Score;
-    switch (operator) {
+    switch (op) {
       default:
       case 'set':
         updateScore = await this.scoreModel.findOneAndUpdate(

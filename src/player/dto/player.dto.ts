@@ -3,7 +3,7 @@ import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 export class PlayerData {
   @IsString()
   @IsNotEmpty()
-  socketId: string;
+  username: string;
 
   @IsString()
   @IsNotEmpty()

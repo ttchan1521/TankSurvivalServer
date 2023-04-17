@@ -41,7 +41,7 @@ export class UpdateUserScoreDto {
   @IsString()
   @IsDefined()
   @IsNotEmpty()
-  operator: string;
+  op: string;
 }
 
 export class ListUserDto {

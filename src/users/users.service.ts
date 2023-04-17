@@ -51,6 +51,7 @@ export class UsersService {
 
     let updateScore: Score;
     switch (operator) {
+      default:
       case 'set':
         updateScore = await this.scoreModel.findOneAndUpdate(
           { user: userId, mode: mode },
@@ -65,8 +66,8 @@ export class UsersService {
         break;
       case 'best':
         updateScore = await this.scoreModel.findOneAndUpdate(
-          { user: userId, mode: mode, score: { $lt: score } },
-          { score: score },
+          { user: userId, mode: mode },
+          { $max: { score: score } },
           { new: true, upsert: true },
         );
         this.redisClient.zadd(
@@ -97,7 +98,7 @@ export class UsersService {
         );
         this.redisClient.zadd(
           `user:leaderboard:${mode}`,
-          'GT',
+          'INCR',
           -score,
           `user:${userId}`,
         );
